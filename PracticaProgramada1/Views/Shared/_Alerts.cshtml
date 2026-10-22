@@ -1,0 +1,9 @@
+@* Mensajes que llegan por TempData desde los controladores (éxito o error). *@
+@if (TempData["SuccessMessage"] is string message)
+{
+    <div class="alert alert-success shadow-sm"><i class="bi bi-check-circle"></i> @message</div>
+}
+@if (TempData["ErrorMessage"] is string error)
+{
+    <div class="alert alert-danger shadow-sm"><i class="bi bi-exclamation-circle"></i> @error</div>
+}

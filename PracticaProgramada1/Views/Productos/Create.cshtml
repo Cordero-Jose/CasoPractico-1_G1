@@ -1,0 +1,17 @@
+@model PracticaProgramada1.ViewModels.ProductoFormViewModel
+@{
+    ViewBag.Title = "Nuevo producto";
+}
+
+<div class="form-card p-4">
+    <h1 class="h3 titulo-seccion"><i class="bi bi-plus-circle"></i>Crear producto</h1>
+    @using (Html.BeginForm("Create", "Productos", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Partial("_Form", Model)
+        <div class="d-flex gap-2 mt-4">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Guardar</button>
+            <a class="btn btn-outline-secondary" href="@Url.Action("Index")"><i class="bi bi-arrow-left"></i> Volver</a>
+        </div>
+    }
+</div>

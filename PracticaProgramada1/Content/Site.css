@@ -1,0 +1,118 @@
+/* Paleta: #092328 oscuro, #12544F primario, #2A835F medio, #8BBB92 claro.
+   Se apoya en Bootstrap 5 (CDN en _Layout) y solo sobreescribe colores. */
+:root {
+    --c-oscuro: #092328;
+    --c-primario: #12544F;
+    --c-medio: #2A835F;
+    --c-claro: #8BBB92;
+    --bs-primary: #12544F;
+    --bs-primary-rgb: 18, 84, 79;
+    --bs-link-color: #12544F;
+    --bs-link-hover-color: #2A835F;
+}
+
+body {
+    background: #f2f7f3;
+    color: var(--c-oscuro);
+    margin-bottom: 60px;
+}
+
+.navbar-agro {
+    background: var(--c-oscuro);
+    border-bottom: 4px solid var(--c-medio);
+}
+.navbar-agro .navbar-brand i,
+.navbar-agro .nav-link i { color: var(--c-claro); }
+.navbar-agro .nav-link { color: var(--c-claro); }
+.navbar-agro .nav-link:hover { color: #fff; }
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    line-height: 60px;
+    color: var(--c-primario);
+}
+
+/* Tarjetas (mismos nombres que TiendaMVC) */
+.table-card,
+.form-card {
+    background: #fff;
+    border: 1px solid var(--c-claro);
+    border-radius: .5rem;
+}
+
+.titulo-seccion i { color: var(--c-medio); margin-right: .4rem; }
+
+/* Botones */
+.btn-primary {
+    --bs-btn-bg: var(--c-primario);
+    --bs-btn-border-color: var(--c-primario);
+    --bs-btn-hover-bg: var(--c-medio);
+    --bs-btn-hover-border-color: var(--c-medio);
+    --bs-btn-active-bg: var(--c-medio);
+    --bs-btn-active-border-color: var(--c-medio);
+    --bs-btn-disabled-bg: var(--c-primario);
+    --bs-btn-disabled-border-color: var(--c-primario);
+}
+.btn-outline-primary {
+    --bs-btn-color: var(--c-primario);
+    --bs-btn-border-color: var(--c-primario);
+    --bs-btn-hover-bg: var(--c-primario);
+    --bs-btn-hover-border-color: var(--c-primario);
+    --bs-btn-active-bg: var(--c-primario);
+    --bs-btn-active-border-color: var(--c-primario);
+}
+.btn-outline-secondary {
+    --bs-btn-color: var(--c-oscuro);
+    --bs-btn-border-color: var(--c-claro);
+    --bs-btn-hover-color: var(--c-oscuro);
+    --bs-btn-hover-bg: var(--c-claro);
+    --bs-btn-hover-border-color: var(--c-claro);
+    --bs-btn-active-color: var(--c-oscuro);
+    --bs-btn-active-bg: var(--c-claro);
+    --bs-btn-active-border-color: var(--c-claro);
+}
+.btn-dark-agro {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--c-oscuro);
+    --bs-btn-border-color: var(--c-oscuro);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #b3261e;
+    --bs-btn-hover-border-color: #b3261e;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #b3261e;
+    --bs-btn-active-border-color: #b3261e;
+}
+
+/* Tabla */
+.table thead th {
+    background: var(--c-oscuro);
+    color: #fff;
+    border-color: var(--c-oscuro);
+    white-space: nowrap;
+}
+.table-hover > tbody > tr:hover > * { --bs-table-hover-bg: #e3efe5; }
+
+/* Insignias */
+.badge-unidad { background: var(--c-claro); color: var(--c-oscuro); }
+.badge-activo { background: var(--c-medio); color: #fff; }
+.badge-inactivo { background: #d9dfda; color: var(--c-oscuro); }
+
+/* Formularios */
+.form-label { color: var(--c-primario); font-weight: 600; }
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--c-medio);
+    box-shadow: 0 0 0 .2rem rgba(42, 131, 95, .25);
+}
+.form-check-input:checked { background-color: var(--c-primario); border-color: var(--c-primario); }
+
+/* Clases que genera MVC 5 al validar */
+.input-validation-error { border-color: #b3261e !important; background: #fdf3f2; }
+.field-validation-error { color: #b3261e; font-size: .875rem; }
+.validation-summary-errors { color: #b3261e; }
+.validation-summary-errors ul { margin-bottom: 0; }
+.validation-summary-valid { display: none; }
+
+dl.detalle dt { color: var(--c-primario); }

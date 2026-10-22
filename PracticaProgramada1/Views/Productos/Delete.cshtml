@@ -1,0 +1,27 @@
+@model PracticaProgramada1.Models.Producto
+@{
+    ViewBag.Title = "Eliminar producto";
+}
+
+<div class="form-card p-4">
+    <h1 class="h3 titulo-seccion"><i class="bi bi-exclamation-triangle"></i>Eliminar producto</h1>
+    <p>¿Seguro que desea eliminar este producto? Esta acción no se puede deshacer.</p>
+    <dl class="row detalle">
+        <dt class="col-sm-3">Código</dt>
+        <dd class="col-sm-9">@Model.Codigo</dd>
+        <dt class="col-sm-3">Nombre</dt>
+        <dd class="col-sm-9">@Model.Nombre</dd>
+        <dt class="col-sm-3">Categoría</dt>
+        <dd class="col-sm-9">@Model.Categoria.NombreCategoria</dd>
+        <dt class="col-sm-3">Unidad de medida</dt>
+        <dd class="col-sm-9">@Model.UnidadMedida</dd>
+    </dl>
+    @using (Html.BeginForm("Delete", "Productos", new { id = Model.Id }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-dark-agro"><i class="bi bi-trash"></i> Eliminar</button>
+            <a class="btn btn-outline-secondary" href="@Url.Action("Index")"><i class="bi bi-x-lg"></i> Cancelar</a>
+        </div>
+    }
+</div>
