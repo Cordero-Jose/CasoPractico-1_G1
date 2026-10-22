@@ -1,0 +1,11 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Compilación
+bin/
+obj/
+
+# Paquetes NuGet (se restauran al abrir la solución)
+packages/

@@ -2,8 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PracticaProgramada1.Models
 {
-    // Mismo patrón de TiendaMVC: las validaciones viven en clases "Metadata" aparte
-    // y se enlazan con [MetadataType], así el modelo principal queda limpio.
+    // Las validaciones viven en clases "Metadata" aparte y se enlazan con [MetadataType], así el modelo principal queda limpio.
 
     [MetadataType(typeof(CategoriaMetadata))]
     public partial class Categoria
@@ -34,16 +33,19 @@ namespace PracticaProgramada1.Models
         [StringLength(80, MinimumLength = 3, ErrorMessage = "El nombre debe tener entre 3 y 80 caracteres.")]
         public string Nombre { get; set; }
 
+        [Required(ErrorMessage = "Seleccione una categoría.")]
         [Range(1, int.MaxValue, ErrorMessage = "Seleccione una categoría.")]
         [Display(Name = "Categoría")]
         public int IdCategoria { get; set; }
 
+        [Required(ErrorMessage = "El precio es obligatorio.")]
         [Range(typeof(decimal), "0.01", "99999999", ErrorMessage = "El precio debe ser mayor que cero.")]
         public decimal Precio { get; set; }
 
         [Display(Name = "Unidad de medida")]
         public UnidadMedida UnidadMedida { get; set; }
 
+        [Required(ErrorMessage = "La existencia es obligatoria.")]
         [Range(typeof(decimal), "0", "9999", ErrorMessage = "La existencia debe estar entre 0 y 9999.")]
         public decimal Existencia { get; set; }
 

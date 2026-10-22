@@ -34,7 +34,7 @@ body {
     color: var(--c-primario);
 }
 
-/* Tarjetas (mismos nombres que TiendaMVC) */
+/* Tarjetas */
 .table-card,
 .form-card {
     background: #fff;

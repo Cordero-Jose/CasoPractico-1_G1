@@ -20,7 +20,7 @@ namespace PracticaProgramada1.Data
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            // Sin borrado en cascada (equivalente a DeleteBehavior.Restrict de TiendaMVC).
+            // Sin borrado en cascada: no se puede eliminar una categoría que tenga productos.
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
 
             modelBuilder.Entity<Categoria>().ToTable("Categorias");
