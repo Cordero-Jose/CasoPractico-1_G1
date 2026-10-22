@@ -14,7 +14,9 @@
 body {
     background: #f2f7f3;
     color: var(--c-oscuro);
-    margin-bottom: 60px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .navbar-agro {
@@ -27,14 +29,12 @@ body {
 .navbar-agro .nav-link:hover { color: #fff; }
 
 .footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+    margin-top: auto;
     line-height: 60px;
     color: var(--c-primario);
 }
 
-/* Tarjetas (mismos nombres que TiendaMVC) */
+/* Tarjetas */
 .table-card,
 .form-card {
     background: #fff;

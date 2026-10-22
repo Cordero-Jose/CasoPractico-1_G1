@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -73,11 +75,7 @@ namespace PracticaProgramada1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(ProductoFormViewModel viewModel)
         {
-            // Validación extra: el código no se puede repetir.
-            if (await _context.Productos.AnyAsync(p => p.Codigo == viewModel.Producto.Codigo))
-            {
-                ModelState.AddModelError("Producto.Codigo", "Ya existe un producto con ese código.");
-            }
+            await ValidarProductoAsync(viewModel.Producto, null);
 
             if (!ModelState.IsValid)
             {
@@ -85,7 +83,17 @@ namespace PracticaProgramada1.Controllers
             }
 
             _context.Productos.Add(viewModel.Producto);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex) when (EsCodigoDuplicado(ex))
+            {
+                // Otro envío guardó el mismo código entre la validación y el guardado.
+                _context.Entry(viewModel.Producto).State = EntityState.Detached;
+                ModelState.AddModelError("Producto.Codigo", "Ya existe un producto con ese código.");
+                return View(await BuildViewModelAsync(viewModel.Producto));
+            }
 
             TempData["SuccessMessage"] = "Producto creado correctamente.";
             return RedirectToAction("Details", new { id = viewModel.Producto.Id });
@@ -117,21 +125,17 @@ namespace PracticaProgramada1.Controllers
                 return HttpNotFound();
             }
 
-            // El código no se puede repetir en OTRO producto.
-            if (await _context.Productos.AnyAsync(p => p.Codigo == viewModel.Producto.Codigo && p.Id != id))
-            {
-                ModelState.AddModelError("Producto.Codigo", "Ya existe otro producto con ese código.");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return View(await BuildViewModelAsync(viewModel.Producto));
-            }
-
             var productoDb = await _context.Productos.FindAsync(id);
             if (productoDb == null)
             {
                 return HttpNotFound();
+            }
+
+            await ValidarProductoAsync(viewModel.Producto, id);
+
+            if (!ModelState.IsValid)
+            {
+                return View(await BuildViewModelAsync(viewModel.Producto));
             }
 
             // Reasignación manual de los campos editables.
@@ -143,7 +147,15 @@ namespace PracticaProgramada1.Controllers
             productoDb.Existencia = viewModel.Producto.Existencia;
             productoDb.Activo = viewModel.Producto.Activo;
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex) when (EsCodigoDuplicado(ex))
+            {
+                ModelState.AddModelError("Producto.Codigo", "Ya existe otro producto con ese código.");
+                return View(await BuildViewModelAsync(viewModel.Producto));
+            }
 
             TempData["SuccessMessage"] = "Producto actualizado correctamente.";
             return RedirectToAction("Details", new { id });
@@ -207,6 +219,39 @@ namespace PracticaProgramada1.Controllers
                 Text = c.NombreCategoria,
                 Selected = c.IdCategoria == seleccionada
             }).ToList();
+        }
+
+        // Validaciones que necesitan la base de datos o el texto ya sin espacios.
+        // idActual es null al crear; al editar, excluye al propio producto de la búsqueda de códigos.
+        private async Task ValidarProductoAsync(Producto producto, int? idActual)
+        {
+            // Quita espacios al inicio y al final para que " P001 " cuente igual que "P001".
+            producto.Codigo = producto.Codigo?.Trim();
+            producto.Nombre = producto.Nombre?.Trim();
+
+            if (ModelState.IsValidField("Producto.Nombre") && producto.Nombre != null && producto.Nombre.Length < 3)
+            {
+                ModelState.AddModelError("Producto.Nombre", "El nombre debe tener entre 3 y 80 caracteres.");
+            }
+
+            if (!string.IsNullOrEmpty(producto.Codigo)
+                && await _context.Productos.AnyAsync(p => p.Codigo == producto.Codigo && p.Id != (idActual ?? 0)))
+            {
+                ModelState.AddModelError("Producto.Codigo", "Ya existe un producto con ese código.");
+            }
+
+            if (producto.IdCategoria > 0
+                && !await _context.Categorias.AnyAsync(c => c.IdCategoria == producto.IdCategoria))
+            {
+                ModelState.AddModelError("Producto.IdCategoria", "La categoría seleccionada no existe.");
+            }
+        }
+
+        // 2601 y 2627 son los errores de SQL Server por índice único repetido.
+        private static bool EsCodigoDuplicado(DbUpdateException ex)
+        {
+            var sqlEx = ex.GetBaseException() as SqlException;
+            return sqlEx != null && (sqlEx.Number == 2601 || sqlEx.Number == 2627);
         }
 
         protected override void Dispose(bool disposing)
